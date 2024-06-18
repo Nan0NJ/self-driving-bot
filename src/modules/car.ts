@@ -1,5 +1,6 @@
 import Controls from "./controls";
 import Sensor from "./sensor";
+import {polysIntersection} from "./utils";
 
 class Car {
     public x: number;
@@ -16,6 +17,9 @@ class Car {
     private controls: Controls;
     private sensor: Sensor;
 
+    public polygon: any[];
+    private damaged: boolean;
+
     constructor(x: number, y: number, width: number, height: number) {
         this.x = x;
         this.y = y;
@@ -28,13 +32,55 @@ class Car {
         this.friction = 0.05;
         this.angle = 0;
 
+        this.damaged = false;
+
         this.sensor = new Sensor(this);
         this.controls = new Controls();
     }
 
     public update(roadBorders: any[]) {
-        this.move();
-        this.sensor.update(roadBorders);
+        if (!this.damaged) {
+            this.move()
+            this.polygon = this.createPolygon()
+            this.damaged = this.assessDamage(roadBorders)
+        }
+        this.sensor.update(roadBorders)
+    }
+
+    private assessDamage(roadBorders: any[]) {
+        for (let i = 0; i < roadBorders.length; i++) {
+            if (polysIntersection(this.polygon, roadBorders[i])) {
+                return true
+            }
+        }
+        return false;
+    }
+
+    private createPolygon() {
+        const points = [];
+        const rad = Math.hypot(this.width, this.height) / 2
+        const alpha = Math.atan2(this.width, this.height)
+        points.push({
+            x: this.x - Math.sin(this.angle - alpha) * rad,
+            y: this.y - Math.cos(this.angle - alpha) * rad
+        })
+
+        points.push({
+            x: this.x - Math.sin(this.angle + alpha) * rad,
+            y: this.y - Math.cos(this.angle + alpha) * rad
+        })
+
+        points.push({
+            x: this.x - Math.sin(Math.PI + this.angle - alpha) * rad,
+            y: this.y - Math.cos(Math.PI + this.angle - alpha) * rad
+        })
+
+        points.push({
+            x: this.x - Math.sin(Math.PI + this.angle + alpha) * rad,
+            y: this.y - Math.cos(Math.PI + this.angle + alpha) * rad
+        })
+
+        return points
     }
 
     private move() {
