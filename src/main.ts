@@ -1,5 +1,6 @@
 import Car from "./modules/car";
 import Road from "./modules/road";
+import NeuralNetwork from "./modules/network";
 
 const canvas : HTMLCanvasElement = document.getElementById('VechicleCanvas') as HTMLCanvasElement;
 
@@ -10,10 +11,50 @@ const ctx : CanvasRenderingContext2D = canvas.getContext('2d');
 // Creation of Init Road Object
 const road = new Road(canvas.width / 2, canvas.width * .94);
 // Creation of Init Car Object - to test
-const bestCar = new Car(road.getLaneCenter(1), 100, 30, 50, "SELF", 3);
+// const bestCar = new Car(road.getLaneCenter(1), 100, 30, 50, "SELF", 3);
+
+const N=1;
+const cars=generateCars(N);
+let bestCar=cars[0];
+if(localStorage.getItem("bestBrain")){
+    for(let i=0;i<cars.length;i++){
+        cars[i].brain=JSON.parse(
+            localStorage.getItem("bestBrain"));
+        if(i!=0){
+            NeuralNetwork.mutate(cars[i].brain,0.1);
+        }
+    }
+}
+
+function save(){
+    localStorage.setItem("bestBrain",
+        JSON.stringify(bestCar.brain));
+}
+
+function discard(){
+    localStorage.removeItem("bestBrain");
+}
+
+function generateCars(N){
+    const cars=[];
+    for(let i=1;i<=N;i++){
+        cars.push(new Car(road.getLaneCenter(1),100,50,80,"SELF",4));
+    }
+    return cars;
+}
 
 const traffic = [
-    new Car(road.getLaneCenter(0), -100, 30, 50, "DUMMY", 2)
+    new Car(road.getLaneCenter(1), -100, 50, 80),
+    new Car(road.getLaneCenter(0), -400, 50, 80),
+    new Car(road.getLaneCenter(2), -700, 50, 80),
+    new Car(road.getLaneCenter(2), -1000, 50, 80),
+    new Car(road.getLaneCenter(0), -1000, 50, 80),
+    new Car(road.getLaneCenter(0), -1400, 50, 80),
+    new Car(road.getLaneCenter(1), -1600, 50, 80),
+    new Car(road.getLaneCenter(1), -2100, 50, 80),
+    new Car(road.getLaneCenter(0), -2600, 50, 80),
+    new Car(road.getLaneCenter(2), -2300, 50, 80),
+    new Car(road.getLaneCenter(2), -3000, 50, 80),
 ]
 
 animate();
@@ -23,7 +64,13 @@ function animate() {
         traffic[i].update(road.borders,[])
     }
 
-    bestCar.update(road.borders, traffic);
+    for(let i=0;i<cars.length;i++){
+        cars[i].update(road.borders,traffic);
+    }
+    bestCar=cars.find(
+        c=>c.y==Math.min(
+            ...cars.map(c=>c.y)
+        ));
 
     canvas.height = window.innerHeight;
 
