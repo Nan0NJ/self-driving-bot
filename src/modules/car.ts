@@ -1,6 +1,7 @@
 import Controls from "./controls";
 import Sensor from "./sensor";
 import {polysIntersection} from "./utils";
+import NeuralNetwork from "./network";
 
 class Car {
     public x: number;
@@ -20,6 +21,9 @@ class Car {
     public polygon: any[];
     private damaged: boolean;
 
+    public brain: NeuralNetwork;
+    private useAI: boolean;
+
     constructor(x: number, y: number, width: number, height: number, controlledCar: string = "DUMMY", maxSpeed: number = 3) {
         this.x = x;
         this.y = y;
@@ -34,8 +38,11 @@ class Car {
 
         this.damaged = false;
 
+        this.useAI = controlledCar == "SELF";
+
         if (controlledCar != "DUMMY") {
             this.sensor = new Sensor(this);
+            this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4])
         }
 
         this.controls = new Controls(controlledCar);
@@ -48,7 +55,20 @@ class Car {
             this.damaged = this.assessDamage(roadBorders, traffic)
         }
         if (this.sensor) {
-            this.sensor.update(roadBorders, traffic);
+            this.sensor.update(roadBorders, traffic)
+            const offsets = this.sensor.readings.map(
+                s => s == null ? 0 : 1 - s.offset
+            )
+
+            const outputs = NeuralNetwork.feedForward(offsets, this.brain)
+
+            if (this.useAI) {
+                this.controls.forward = outputs[0]
+                this.controls.left = outputs[1]
+                this.controls.right = outputs[2]
+                this.controls.reverse = outputs[3]
+            }
+
         }
     }
 
