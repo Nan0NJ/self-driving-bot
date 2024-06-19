@@ -108,7 +108,10 @@ function animate() {
         traffic[i].draw(ctx, "yellow");
     }
 
-    bestCar.draw(ctx, "green");
+    for(let i=0;i<cars.length;i++){
+        cars[i].draw(ctx, "rgba(60,179,113,0.3)");
+    }
+    bestCar.draw(ctx, "rgba(60,188,71,1)", true);
 
     ctx.restore();
     requestAnimationFrame(animate);
