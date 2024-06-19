@@ -9,26 +9,26 @@ The project focuses on developing a self-driving car simulation system using mac
   nvm install --lts
 
 #### Install Development Dependencies
-In the project directory, run the following command to add TypeScript and Vite as development dependencies:
+- In the project directory, run the following command to add TypeScript and Vite as development dependencies:
     ```sh
     yarn add typescript vite --dev
 
 #### Install All Dependencies
-Once the development dependencies are installed, run the following command to install all the necessary packages:
-    ```
+- Once the development dependencies are installed, run the following command to install all the necessary packages:
+    ```sh
     yarn
 
 ### Running the project
 
 #### Development Server
-To start the development server, run:
+- To start the development server, run:
     ```sh
     yarn dev
 
 #### Build the Project
-To compile the TypeScript code and build the project for production, run:
+- To compile the TypeScript code and build the project for production, run:
     ```sh
     yarn build
 
 #### Preview the Production Build
-To preview the production build locally, run:
+- To preview the production build locally, run:
