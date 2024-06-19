@@ -2,6 +2,8 @@ import Car from "./modules/car";
 import Road from "./modules/road";
 import NeuralNetwork from "./modules/network";
 
+
+// Canvas setup for Visual Vechicle Simulation
 const canvas : HTMLCanvasElement = document.getElementById('VechicleCanvas') as HTMLCanvasElement;
 
 canvas.width = 300;
@@ -10,16 +12,20 @@ const ctx : CanvasRenderingContext2D = canvas.getContext('2d');
 
 // Creation of Init Road Object
 const road = new Road(canvas.width / 2, canvas.width * .94);
+
 // Creation of Init Car Object - to test
 // const bestCar = new Car(road.getLaneCenter(1), 100, 30, 50, "SELF", 3);
+
 
 document.getElementById("carsCount").onchange = () => {
     localStorage.setItem('carsCount', (document.getElementById("carsCount") as HTMLInputElement).value);
     window.location.reload();
 };
 
+// Creation of Car Array Objects - to develop with the Genetic Algorithm
 const cars: Car[] = generateCars(localStorage.getItem("carsCount") || 100);
 
+// The Trainning Data / Set for the Neural Network - to develop 
 const traffic = [
     new Car(road.getLaneCenter(1), -100, 50, 80),
     new Car(road.getLaneCenter(0), -400, 50, 80),
@@ -34,31 +40,46 @@ const traffic = [
     new Car(road.getLaneCenter(2), -3000, 50, 80),
 ]
 
+// We initialize the bestCar with the first car in the array
 let bestCar:Car = cars[0];
 
+// If there is a bestBrain in the local storage, we load it 
+// We simply mutate the other cars with a mutation rate of 0.2
 if(localStorage.getItem('bestBrain')){
     for (let i = 0;i<cars.length;i++){
         cars[i].brain = JSON.parse(localStorage.getItem('bestBrain'))
-        if(i!=0){
+        if(i!=0){ // We don't want to mutate the best car
             NeuralNetwork.mutate(cars[i].brain,.2)
         }
     }
 }
+// Pros and Cons to Higher or Lower Mutation Rate
+/*
+    - Higher Mutation Rate:
+        - Increased Divrisity with Faster Evolution
+        - Loss of obtained good solutions with too much randomness
+    - Lower Mutation Rate:
+        - We will have more stability with fine-tuning and prevent overfitting
+        - Yet, we will have a slower evolution and a risk of getting stuck in some local optima which is not the best solution.
+*/
 
 animate();
 
+// Save the best brain in the local storage
 document.getElementById('#save').addEventListener('click', function() {
     localStorage.setItem("bestBrain", JSON.stringify(bestCar.brain));
 });
 
+// Discard the best brain from the local storage
 document.getElementById('discard').addEventListener('click', function() {
     localStorage.removeItem("bestBrain");
 });
 
+// generateCars Function
 function generateCars(N){
     const cars=[];
     for(let i=1;i<=N;i++){
-        cars.push(new Car(road.getLaneCenter(1),100,50,80,"SELF",4));
+        cars.push(new Car(road.getLaneCenter(1),100,50,80,"SELF",4, "green"));
     }
     return cars;
 }
