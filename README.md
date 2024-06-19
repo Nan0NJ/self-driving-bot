@@ -10,12 +10,6 @@ The project is developed using modern web technologies and tools. Key features o
 - **TypeScript:** The entire codebase is written in Typescript
 - **Simulation Environment:** A simulation environment is created to test and validate the self-driving algorithms.
 
-
-
-## Report
-The report can be found on Overleaf: [Self-Driving Bot Report](https://www.overleaf.com/read/ktvxvrcbvcxr#9ad0b6)
-
-
 ## How to Use
 
 ### Prerequisites
@@ -49,3 +43,8 @@ The report can be found on Overleaf: [Self-Driving Bot Report](https://www.overl
 - To preview the production build locally, run:
     ```sh
     yarn preview
+
+## More information
+
+More information and references can be found on here: [Self-Driving Bot Report](https://www.overleaf.com/read/ktvxvrcbvcxr#9ad0b6)
+
