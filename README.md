@@ -1,5 +1,20 @@
 # Self-Driving Bot
-The project focuses on developing a self-driving car simulation system using machine learning and artificial intelligence to enable clear navigation on roads.
+
+The Self-Driving Bot project focuses on developing a sophisticated self-driving car simulation system utilizing machine learning and artificial intelligence to enable clear and efficient navigation on roads. This simulation aims to mimic real-world driving scenarios, providing a platform to test and improve autonomous driving algorithms.
+
+## Project Description
+
+The project is developed using modern web technologies and tools. Key features of the project include:
+
+- **Machine Learning and AI:** The core of the self-driving capabilities is powered by a machine learning model and AI algorithms, designed to process and interpret sensor data ( with rays ), make decisions, and control the vehicle.
+- **TypeScript:** The entire codebase is written in Typescript
+- **Simulation Environment:** A simulation environment is created to test and validate the self-driving algorithms.
+
+
+
+## Report
+The report can be found on Overleaf: [Self-Driving Bot Report](https://www.overleaf.com/read/ktvxvrcbvcxr#9ad0b6)
+
 
 ## How to Use
 
@@ -34,6 +49,3 @@ The project focuses on developing a self-driving car simulation system using mac
 - To preview the production build locally, run:
     ```sh
     yarn preview
-
-## Report
-The report can be found on Overleaf: [Self-Driving Bot Report](https://www.overleaf.com/read/ktvxvrcbvcxr#9ad0b6)
