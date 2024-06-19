@@ -32,3 +32,5 @@ The project focuses on developing a self-driving car simulation system using mac
 
 #### Preview the Production Build
 - To preview the production build locally, run:
+    ```sh
+    yarn preview
