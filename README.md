@@ -34,3 +34,6 @@ The project focuses on developing a self-driving car simulation system using mac
 - To preview the production build locally, run:
     ```sh
     yarn preview
+
+## Report
+The report can be found on Overleaf: [Self-Driving Bot Report](https://www.overleaf.com/read/ktvxvrcbvcxr#9ad0b6)
