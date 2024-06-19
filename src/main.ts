@@ -66,7 +66,7 @@ if(localStorage.getItem('bestBrain')){
 animate();
 
 // Save the best brain in the local storage
-document.getElementById('#save').addEventListener('click', function() {
+document.getElementById('save').addEventListener('click', function() {
     localStorage.setItem("bestBrain", JSON.stringify(bestCar.brain));
 });
 
@@ -92,6 +92,9 @@ function animate() {
 
     for(let i=0;i<cars.length;i++){
         cars[i].update(road.borders,traffic);
+        if (cars[i].damaged) {
+            generateCars(Number(localStorage.getItem("carsCount") || 100) - cars.length);
+        }
     }
 
     // Check if all traffic cars are passed and out of display

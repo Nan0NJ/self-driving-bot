@@ -19,7 +19,7 @@ class Car {
     private sensor: Sensor;
 
     public polygon: any[];
-    private damaged: boolean;
+    public damaged: boolean;
 
     public brain: NeuralNetwork;
     private useAI: boolean;
