@@ -101,7 +101,7 @@ function animate() {
     const allPassedAndOutOfView = traffic.every(car => car.y > bestCar.y + window.innerHeight);
 
     if (allPassedAndOutOfView) {
-        traffic.length = 0; // Clear the traffic array
+        traffic.length; // Clear the traffic array
         // Ones Car passes all traffic we generate our new traffic
         // The Testing Data / Set for the Neural Network - to test AI 
         for (let i = 0; i < 10; i++) {
