@@ -71,7 +71,8 @@ class Car {
                 this.controls.right = outputs[2];
                 this.controls.reverse = outputs[3];
     
-                // Implement ray logic here
+            // Implement the AI logic here
+
         }
     }
 
