@@ -66,12 +66,12 @@ class Car {
             const outputs = NeuralNetwork.feedForward(offsets, this.brain)
 
             if (this.useAI) {
-                this.controls.forward = outputs[0]
-                this.controls.left = outputs[1]
-                this.controls.right = outputs[2]
-                this.controls.reverse = outputs[3]
-            }
-
+                this.controls.forward = outputs[0];
+                this.controls.left = outputs[1];
+                this.controls.right = outputs[2];
+                this.controls.reverse = outputs[3];
+    
+                // Implement ray logic here
         }
     }
 
