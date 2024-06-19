@@ -51,6 +51,7 @@ class Car {
         
     }
 
+    // Function update updates car position and checks for damage
     public update(roadBorders: any[], traffic: Car[]) {
         if (!this.damaged) {
             this.move()

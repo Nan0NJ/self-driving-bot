@@ -85,12 +85,27 @@ function generateCars(N){
 
 
 function animate() {
+    // Here we update the traffic and the cars
     for(let i = 0;i<traffic.length;i++){
         traffic[i].update(road.borders,[])
     }
 
     for(let i=0;i<cars.length;i++){
         cars[i].update(road.borders,traffic);
+    }
+
+    // Check if all traffic cars are passed and out of display
+    const allPassedAndOutOfView = traffic.every(car => car.y > bestCar.y + window.innerHeight);
+
+    if (allPassedAndOutOfView) {
+        traffic.length = 0; // Clear the traffic array
+        // Ones Car passes all traffic we generate our new traffic
+        // The Testing Data / Set for the Neural Network - to test AI 
+        for (let i = 0; i < 10; i++) {
+            if (Math.random() < 0.05) { // Adjust probability to control frequency
+                generateTraffic(traffic, bestCar, road, canvas);
+            }
+        }
     }
     bestCar=cars.find(
         c=>c.y==Math.min(
@@ -104,6 +119,7 @@ function animate() {
 
     road.draw(ctx);
 
+    // Draw the traffic and the cars
     for(let i=0;i<traffic.length;i++){
         traffic[i].draw(ctx, "yellow");
     }
@@ -117,3 +133,28 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+function generateTraffic(traffic: Array<Car>, car: Car, road: Road, canvas: HTMLCanvasElement) {
+    // Limit the number of cars on the road 
+    if (traffic.length > 10) return;  
+
+    const laneIndex = Math.floor(Math.random() * 3); // This will generate 0, 1, or 2
+    const xPos = road.getLaneCenter(laneIndex);
+
+    // Define spawn position ahead of the main car, adjusting for safe distance
+    const minimumSpawnDistance = 300;
+    const yPos = car.y - minimumSpawnDistance; 
+
+    // Ensure new car does not spawn too close to others in the same lane
+    let isSpaceAvailable = true;
+    traffic.forEach(tc => {
+        if (tc.x === xPos && Math.abs(tc.y - yPos) < minimumSpawnDistance) {
+            isSpaceAvailable = false;
+        }
+    });
+
+    // Exit if there is no space available
+    if (!isSpaceAvailable) return;
+
+    // Create and add new car to the array
+    traffic.push(new Car(xPos, yPos, 50, 80));
+}
