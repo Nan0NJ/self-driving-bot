@@ -70,8 +70,9 @@ class Car {
                 this.controls.left = outputs[1];
                 this.controls.right = outputs[2];
                 this.controls.reverse = outputs[3];
-    
-            // Implement the AI logic here
+                
+                // Implement logic here
+            }
 
         }
     }
