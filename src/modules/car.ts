@@ -46,6 +46,9 @@ class Car {
         }
 
         this.controls = new Controls(controlledCar);
+
+        // Draw all the cars generated
+        
     }
 
     public update(roadBorders: any[], traffic: Car[]) {
@@ -162,7 +165,7 @@ class Car {
 
     draw(ctx: CanvasRenderingContext2D, color: string) {
         if(this.damaged){
-            ctx.fillStyle="gray";
+            ctx.fillStyle="red";
         }else{
             ctx.fillStyle=color;
         }

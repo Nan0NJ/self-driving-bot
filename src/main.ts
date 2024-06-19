@@ -75,11 +75,10 @@ document.getElementById('discard').addEventListener('click', function() {
     localStorage.removeItem("bestBrain");
 });
 
-// generateCars Function
 function generateCars(N){
     const cars=[];
     for(let i=1;i<=N;i++){
-        cars.push(new Car(road.getLaneCenter(1),100,50,80,"SELF",4, "green"));
+        cars.push(new Car(road.getLaneCenter(1),100,50,80,"SELF",4));
     }
     return cars;
 }
@@ -109,7 +108,7 @@ function animate() {
         traffic[i].draw(ctx, "yellow");
     }
 
-    bestCar.draw(ctx, "blue");
+    bestCar.draw(ctx, "green");
 
     ctx.restore();
     requestAnimationFrame(animate);
