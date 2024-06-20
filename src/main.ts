@@ -38,7 +38,7 @@ const traffic = [
     new Car(road.getLaneCenter(0), -2600, 50, 80),
     new Car(road.getLaneCenter(2), -2300, 50, 80),
     new Car(road.getLaneCenter(2), -3000, 50, 80),
-]
+];
 
 // We initialize the bestCar with the first car in the array
 let bestCar:Car = cars[0];
@@ -83,33 +83,37 @@ function generateCars(N){
     return cars;
 }
 
+// Before drawing, ensure all objects in traffic are instances of Car
+function isCarInstance(obj: any): obj is Car {
+    return obj instanceof Car;
+}
 
 function animate() {
-    // Here we update the traffic and the cars
+    // Update the traffic and the cars
     for(let i = 0;i<traffic.length;i++){
-        traffic[i].update(road.borders,[])
+        if (isCarInstance(traffic[i])) {
+            traffic[i].update(road.borders, []);
+        }
     }
 
     for(let i=0;i<cars.length;i++){
-        cars[i].update(road.borders,traffic);
+        cars[i].update(road.borders, traffic);
         if (cars[i].damaged) {
             generateCars(Number(localStorage.getItem("carsCount") || 100) - cars.length);
         }
     }
 
-    // Check if all traffic cars are passed and out of display
     const allPassedAndOutOfView = traffic.every(car => car.y > bestCar.y + window.innerHeight);
 
     if (allPassedAndOutOfView) {
-        traffic.length; // Clear the traffic array
-        // Ones Car passes all traffic we generate our new traffic
-        // The Testing Data / Set for the Neural Network - to test AI 
+        traffic.length = 0; // Clear the traffic array correctly
         for (let i = 0; i < 10; i++) {
-            if (Math.random() < 0.05) { // Adjust probability to control frequency
+            if (Math.random() < 0.05) {
                 generateTraffic(traffic, bestCar, road, canvas);
             }
         }
     }
+
     bestCar=cars.find(
         c=>c.y==Math.min(
             ...cars.map(c=>c.y)
@@ -124,7 +128,9 @@ function animate() {
 
     // Draw the traffic and the cars
     for(let i=0;i<traffic.length;i++){
-        traffic[i].draw(ctx, "yellow");
+        if (isCarInstance(traffic[i])) {
+            traffic[i].draw(ctx, "yellow");
+        }
     }
 
     for(let i=0;i<cars.length;i++){
@@ -136,18 +142,16 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+// Generate traffic with a maximum of 10 cars
 function generateTraffic(traffic: Array<Car>, car: Car, road: Road, canvas: HTMLCanvasElement) {
-    // Limit the number of cars on the road 
-    if (traffic.length > 10) return;  
+    if (traffic.length > 10) return;
 
     const laneIndex = Math.floor(Math.random() * 3); // This will generate 0, 1, or 2
     const xPos = road.getLaneCenter(laneIndex);
 
-    // Define spawn position ahead of the main car, adjusting for safe distance
     const minimumSpawnDistance = 300;
-    const yPos = car.y - minimumSpawnDistance; 
+    const yPos = car.y - minimumSpawnDistance;
 
-    // Ensure new car does not spawn too close to others in the same lane
     let isSpaceAvailable = true;
     traffic.forEach(tc => {
         if (tc.x === xPos && Math.abs(tc.y - yPos) < minimumSpawnDistance) {
@@ -155,9 +159,8 @@ function generateTraffic(traffic: Array<Car>, car: Car, road: Road, canvas: HTML
         }
     });
 
-    // Exit if there is no space available
     if (!isSpaceAvailable) return;
 
-    // Create and add new car to the array
+    // Adjust parameters to match Car constructor
     traffic.push(new Car(xPos, yPos, 50, 80));
 }

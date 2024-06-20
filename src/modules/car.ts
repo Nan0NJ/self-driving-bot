@@ -47,6 +47,7 @@ class Car {
 
         this.controls = new Controls(controlledCar);
 
+        this.polygon = this.createPolygon();
         // Draw all the cars generated
         
     }
