@@ -1,7 +1,10 @@
+// lerp - to derive a value between two values
 function lerp(A, B, t) {
-    return A + (B - A) * t;
+    return A + (B - A) * t; // to perform linear interpolation
+    // used to get a point between to points
 }
 
+// check if two lines intersect, used for ray casting
 function getIntersection(A, B, C, D) {
     const tTop = (D.x - C.x) * (A.y - C.y) - (D.y - C.y) * (A.x - C.x)
     const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y)
@@ -22,6 +25,7 @@ function getIntersection(A, B, C, D) {
     return null
 }
 
+// Check if two polygons intersect, used for collision detection
 function polysIntersection(poly1: any[], poly2: any) {
     for (let i = 0; i < poly1.length; i++) {
         for (let j = 0; j < poly2.length; j++) {

@@ -4,8 +4,10 @@ import {polysIntersection} from "./utils";
 import NeuralNetwork from "./network";
 
 class Car {
+    // Setting position of the car
     public x: number;
     public y: any;
+    // Setting width and height of the car
     private readonly width: number;
     private readonly height: number;
 
@@ -18,9 +20,11 @@ class Car {
     private controls: Controls;
     private sensor: Sensor;
 
+    // polygon is the shape of the car
     public polygon: any[];
     public damaged: boolean;
 
+    // useNetwork determines whether the car uses a neural network to drive
     public brain: NeuralNetwork;
     private useAI: boolean;
 
@@ -40,6 +44,7 @@ class Car {
 
         this.useAI = controlledCar == "SELF";
 
+        // If the car is controllable, create a sensor for it
         if (controlledCar != "DUMMY") {
             this.sensor = new Sensor(this);
             this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4])
@@ -48,18 +53,21 @@ class Car {
         this.controls = new Controls(controlledCar);
 
         this.polygon = this.createPolygon();
-        // Draw all the cars generated
         
     }
 
     // Function update updates car position and checks for damage
     public update(roadBorders: any[], traffic: Car[]) {
+        // If the car is damaged, don't update its position
         if (!this.damaged) {
             this.move()
             this.polygon = this.createPolygon()
             this.damaged = this.assessDamage(roadBorders, traffic)
         }
+        // If the car has a sensor, update the sensor positions
         if (this.sensor) {
+            // we read 3 things: x, y, offset | no reading return 0
+            // 1 - offset because we want to know how far the car is from the road
             this.sensor.update(roadBorders, traffic)
             const offsets = this.sensor.readings.map(
                 s => s == null ? 0 : 1 - s.offset
@@ -68,17 +76,17 @@ class Car {
             const outputs = NeuralNetwork.feedForward(offsets, this.brain)
 
             if (this.useAI) {
+                // Use of basic logic to control the car
                 this.controls.forward = outputs[0];
                 this.controls.left = outputs[1];
                 this.controls.right = outputs[2];
                 this.controls.reverse = outputs[3];
                 
-                // Implement logic here
             }
 
         }
     }
-
+    // Function assessDamage checks if the car is damaged
     private assessDamage(roadBorders: any[], traffic: Car[]) {
         for (let i = 0; i < roadBorders.length; i++) {
             if (polysIntersection(this.polygon, roadBorders[i])) {
@@ -94,7 +102,7 @@ class Car {
 
         return false
     }
-
+    // Create the polygon shape of the car
     private createPolygon() {
         const points = [];
         const rad = Math.hypot(this.width, this.height) / 2
@@ -121,7 +129,7 @@ class Car {
 
         return points
     }
-
+    // Function move moves the car
     private move() {
         if (this.controls.forward) {
             this.speed += this.acceleration
@@ -167,7 +175,9 @@ class Car {
         this.y -= Math.cos(this.angle) * this.speed
     }
 
+    // Draws the car and its sensor ( if true )
     draw(ctx: CanvasRenderingContext2D, color: string, best: boolean = false) {
+        // If the car is damaged, draw it in red = to appear as a hit
         if(this.damaged){
             if (best) {
                 ctx.fillStyle="red";
@@ -177,6 +187,7 @@ class Car {
         }else{
             ctx.fillStyle=color;
         }
+        // Draw the car 
         ctx.beginPath();
         ctx.moveTo(this.polygon[0].x,this.polygon[0].y);
         for(let i=1;i<this.polygon.length;i++){

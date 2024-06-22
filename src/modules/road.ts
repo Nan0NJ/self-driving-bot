@@ -1,15 +1,20 @@
 import {lerp} from "./utils";
 
 export default class Road {
+    // x is the CENTER of the road
     private x: number;
+    // laneCount is the number of lanes on the road - we set it to 3 by default
     private laneCount: number;
+    // width is the WIDTH of the road
     private width: number;
 
+    // left and right, top and bottom are the left and right bounds of the road
     private left: number;
     private right: number;
-
     private top: number;
     private bottom: number;
+
+    // borders are the borders of the road
     public borders: any[];
 
     constructor(x: number, width: number, laneCount: number = 3) {
@@ -36,9 +41,11 @@ export default class Road {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
+        // We set the color of the road 
         ctx.lineWidth = 5
         ctx.strokeStyle = 'white'
 
+        // Draw the road lines
         for (let i = 1; i <= this.laneCount - 1; i++) {
             const x = lerp(
                 this.left,
@@ -46,6 +53,7 @@ export default class Road {
                 i / this.laneCount
             )
 
+            // Draw the dashed lines
             ctx.setLineDash([20, 20])
 
             ctx.beginPath()
@@ -55,6 +63,7 @@ export default class Road {
         }
 
         ctx.setLineDash([])
+        // Draw the borders of the road
         this.borders.forEach(border => {
             ctx.beginPath()
             ctx.moveTo(border[0].x, border[0].y)
@@ -63,6 +72,7 @@ export default class Road {
         })
     }
 
+    // Get the center of the lane
     getLaneCenter(laneIndex) {
         const laneWidth = this.width / this.laneCount
         return this.left + laneWidth / 2 + Math.min(laneIndex, this.laneCount - 1) * laneWidth

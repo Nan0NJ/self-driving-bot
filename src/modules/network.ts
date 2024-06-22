@@ -3,6 +3,7 @@ import { lerp } from "./utils";
 class NeuralNetwork {
     public levels: Level[];
 
+    // neuronCounts array contains the number of neurons in each level
     constructor(neuronCounts) {
         this.levels = []
         for (let i = 0; i < neuronCounts.length - 1; i++) {
@@ -12,10 +13,12 @@ class NeuralNetwork {
         }
     }
 
+    // final output tells us where to move the car
     public static feedForward(givenInputs, network) {
         let outputs = Level.feedForward(givenInputs, network.levels[0])
 
         for (let i = 1; i < network.levels.length; i++) {
+            // update outputs with the new outputs from the next level
             outputs = Level.feedForward(
                 outputs, network.levels[i]
             )
@@ -25,6 +28,7 @@ class NeuralNetwork {
     }
 
     public static mutate(network: NeuralNetwork, amount = 1) {
+        // Mutate the biases and weights of the network levels
         network.levels.forEach(level => {
             for (let i = 0; i < level.biases.length; i++) {
                 level.biases[i] = lerp(
@@ -33,7 +37,7 @@ class NeuralNetwork {
                     amount
                 )
             }
-
+        // with also Mutating the weights
             for (let i = 0; i < level.weights.length; i++) {
                 for (let j = 0; j < level.weights[i].length; j++) {
                     level.weights[i][j] = lerp(
@@ -47,6 +51,9 @@ class NeuralNetwork {
     }
 }
 
+// the class Level is a layer of the neural network
+// it contains the weights, outputs, biases, and inputs
+// used to calculate the outputs of the layer
 class Level {
     public weights: any[];
     public outputs: any[];
@@ -67,6 +74,7 @@ class Level {
         Level.randomize(this)
     }
 
+    // randomize the weights and biases of the level
     private static randomize(level) {
         for (let i = 0; i < level.inputs.length; i++) {
             for (let j = 0; j < level.outputs.length; j++) {
@@ -79,6 +87,7 @@ class Level {
         }
     }
 
+    // feedForward calculates the outputs of the level
     public static feedForward(givenInputs, level: Level) {
         for (let i = 0; i < level.inputs.length; i++) {
             level.inputs[i] = givenInputs[i];

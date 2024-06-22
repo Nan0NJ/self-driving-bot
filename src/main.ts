@@ -14,6 +14,7 @@ const ctx : CanvasRenderingContext2D = canvas.getContext('2d');
 const road = new Road(canvas.width / 2, canvas.width * .94);
 
 // Creation of Init Car Object - to test
+// FOR TESTING
 // const bestCar = new Car(road.getLaneCenter(1), 100, 30, 50, "SELF", 3);
 
 

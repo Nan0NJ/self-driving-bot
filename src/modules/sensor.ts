@@ -19,6 +19,7 @@ export default class Sensor {
         this.readings = [];
     }
 
+    // updating the sensor readings based on the road borders and traffic
     update(roadBorders: any[], traffic: Car[]) {
         this.castRays();
         this.readings = [];
@@ -29,6 +30,7 @@ export default class Sensor {
         }
     }
 
+    // casting rays from the car to the road borders and traffic
     private castRays() {
         this.rays = []
 
@@ -52,6 +54,8 @@ export default class Sensor {
         }
     }
 
+    // getting the closest reading from the rays to the road borders and traffic
+    // used to determine the distance from the car to the road borders and traffic
     private getReading(ray: any, roadBorders: any[], traffic: Car[]) {
         let touches = [];
 
@@ -83,6 +87,7 @@ export default class Sensor {
             }
         }
 
+        // if we have touches, we return the closest one
         if (touches.length == 0) {
             return null;
         } else {
@@ -92,6 +97,8 @@ export default class Sensor {
         }
     }
 
+    // drawing the rays on the canvas to visualize the sensor readings
+    // determine movement based on the car
     draw(ctx: CanvasRenderingContext2D) {
         for (let i = 0; i < this.rayCount; i++) {
             let end = this.rays[i][1];
